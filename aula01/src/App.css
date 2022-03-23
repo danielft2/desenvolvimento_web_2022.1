@@ -1,0 +1,13 @@
+.App {
+  text-align: center;
+}
+
+.questao {
+  padding-left: 20px;
+  margin-bottom: 30px;
+}
+
+h2, 
+h3 {
+  text-align: left;
+}
