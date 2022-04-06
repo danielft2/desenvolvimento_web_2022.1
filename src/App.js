@@ -1,144 +1,69 @@
-import { Component } from 'react';
+import { Component, useState } from 'react';
 import './App.css';
 
-/*import MeusDados from './components/MeusDados'
-import MeusDadosProps from './components/MeusDadosProps';
-import Informacoes from './components/informacoes';
-*/
+// import IMC from './components/imc/IMC';
+// import IMCClasse from './components/imc/IMCClasse';
+// import Pai from './components/filhopai/Pai';
+// import CidadeSimples from './components/cidades/CIdadeSimples';
+// import CidadeComClasse from './components/cidades/CidadeComClasse';
+// import World from './components/atividade02/components/World';
+// import Arena from './components/atividade02/components/Arena';
+// import Hero from './components/atividade02/components/Hero';
+// import Enemy from './components/atividade02/components/Enemy';
+import Contador from './components/hooks/Contador';
 
-import Questao01 from './components/atividade01/Questao01';
-import Questao02 from './components/atividade01/Questao02';
-import Questao03 from './components/atividade01/Questao03';
-import Questao04 from './components/atividade01/Questao04';
-
-
-//Questão01 - Funções
-/*function App() {
-  return (
-    <div>
-      <Questao01/>
-    </div>
-  )
-}*/
-
-//Questão02 - Classe
-/*function App() {
-  return (
-    <div>
-      <Questao02/>
-    </div>
-  )
-}*/
-
-//Questão03 - props
-/*function App() {
-  return (
-    <div>
-      <Questao03/>
-    </div>
-  )
-}*/
-
-//Questão04 - props
 function App() {
   return (
-    <div>
-      <Questao04/>
+    <div className='App'>
+      <Contador/>
     </div>
   )
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Componente principal que renderiza todos os outros
+//Atividade 2
 /*function App() {
   return (
     <div className='App'>
-      <MeusDados/>
-      <MeusDadosProps 
-        nome="Daniel"
-        curso="ES"
-        diciplina="Desenvolvimento Web"
-      />
-      <Informacoes 
-        nome="Daniel Almeida"
-        curso="ES"
-        turno="Tarde"
-        universidade="UFC"
-      />
-    </div>
+      <div className='App-item'>
+        <World>
+          <Arena arena="Old Trafod">
+            <Hero nome="Daniel Almeida"/>
+            <Enemy nome="Pedro Junior"/>
+          </Arena>
+          <Arena arena="Alianz Parque">
+            <Hero nome="João Lucas"/>
+            <Enemy nome="Leticia"/>
+          </Arena>
+        </World>
+      </div>
+    </div> 
   )
 }*/
 
-//como criar um componente
-// 01 - criando uma função clássica
 /*function App() {
   return (
-    <div className="App">
-      <h1>Nome: Daniel Almeida de Freitas</h1>
-      <h1>Curso: Engenharia de Software</h1>
-      <h1>Disciplina: Desenvolvimento de Software para Web</h1>
+    <div>
+      <Casa>
+        <Personagem nome="Arya" casa="Stark"/>
+        <Personagem nome="Tyrion" casa="Lennister"/>
+        <Personagem nome="Jonh" casa="Stark"/>
+      </Casa>
     </div>
-  );
-}*/
+  )
+}
+*/
 
-// 02 - Uma constante recebendo uma função anônima
-/*const App = () => {
+//Props nos childrens
+/*function App() {
   return (
-    <div className="App">
-      <h1>Nome: Daniel Almeida de Freitas</h1>
-      <h1>Curso: Engenharia de Software</h1>
-      <h1>Disciplina: Desenvolvimento de Software para Web</h1>
+    <div>
+      <Casa casa="Stark" horario="nobre">
+        <Personagem nome="Arya"/>
+        <Personagem nome="Tyrion"/>
+        <Personagem nome="Jonh"/>
+      </Casa>
     </div>
   )
 }*/
-
-// 03 - Sem o return
-/*const App = () => 
-  <div className="App">
-    <h1>Nome: Daniel Almeida de Freitas</h1>
-    <h1>Curso: Engenharia de Software</h1>
-    <h1>Disciplina: Desenvolvimento de Software para Web</h1>
-  </div>
-*/
-
-// 04 - Ciando classe
-/*class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <h1>Nome: Daniel Almeida de Freitas</h1>
-        <h1>Curso: Engenharia de Software</h1>
-        <h1>Disciplina: Desenvolvimento de Software para Web</h1>
-      </div>
-    )
-  }
-}*/
-
 
 export default App;
