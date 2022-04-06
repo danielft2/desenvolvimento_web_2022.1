@@ -12,16 +12,16 @@ import './App.css';
 // import Enemy from './components/atividade02/components/Enemy';
 import Contador from './components/hooks/Contador';
 
-function App() {
+//UseState
+/*function App() {
   return (
     <div className='App'>
       <Contador/>
     </div>
   )
-}
+}*/
 
-//Atividade 2
-/*function App() {
+function App() {
   return (
     <div className='App'>
       <div className='App-item'>
@@ -38,7 +38,7 @@ function App() {
       </div>
     </div> 
   )
-}*/
+}
 
 /*function App() {
   return (
