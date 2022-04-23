@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const CreateTeach = () => {
     const [name, setName] = useState('');
@@ -11,6 +12,11 @@ const CreateTeach = () => {
         setName('');
         setUniversity('');
         setDegree('');
+
+        const newProfessor = {name, university, degree};
+        axios.post("http://172.18.104.241:3001/professors", newProfessor)
+        .then(response => console.log(response.data))
+        .catch( error => console.log(error))
     }
 
     return (

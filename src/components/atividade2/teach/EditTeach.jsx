@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import { teachs } from "./data";
@@ -10,18 +11,26 @@ const EditTeach = () => {
     const param = useParams();
 
     useEffect(() => {
-        const teach = teachs[param.id]
-        setName(teach.name);
-        setUniversity(teach.university);
-        setDegree(teach.degree);
-    })
+        axios.get(`http://localhost:3001/students/${param.id}`)
+        .then(response => {
+            setName(response.data.name);
+            setUniversity(response.data.course);
+            setDegree(response.data.ira);
+        })
+    }, [param.id])
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert(`Professor cadastrado \nNome: ${name} \nUniversidade: ${university} \nTitulação: ${degree}`);
-        setName('');
-        setUniversity('');
-        setDegree('');
+        alert(`Professor Atualizado \nNome: ${name} \nUniversidade: ${university} \nTitulação: ${degree}`);
+        
+        const teachAtualizado = {name, university, degree};
+        axios.put(`http://localhost:3001/professors/${param.id}`, teachAtualizado)
+        .then(response => {
+            console.log(response.data)
+        })
+        .catch(error => {
+            console.log(error);
+        })
     }
 
     return (

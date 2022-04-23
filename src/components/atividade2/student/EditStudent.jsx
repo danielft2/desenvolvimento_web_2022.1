@@ -1,28 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { students } from "./data";
+import axios from "axios";
 
 const EditStudent = () => {
     const [name, setName] = useState('');
     const [course, setCourse] = useState('');
     const [ira, setIra] = useState(0);
-
     const param = useParams();
 
     useEffect(() => {
-        console.log(param)
-        const student = students[param.id];
-        setName(student.name);
-        setCourse(student.course);
-        setIra(student.ira);
-    })
+        axios.get(`http://localhost:3001/students/${param.id}`)
+        .then(response => {
+            setName(response.data.name);
+            setCourse(response.data.course);
+            setIra(response.data.ira)
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }, [param.id])
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert(`Aluno cadastrado \nNome: ${name} \ncurso: ${course} \nIRA: ${ira}`);
-        setName('');
-        setCourse('');
-        setIra(0);
+        alert(`Aluno atualizado \nNome: ${name} \ncurso: ${course} \nIRA: ${ira}`);
+        const studentAtualizado = {name, course, ira}
+
+        axios.put(`http://localhost:3001/students/${param.id}`, studentAtualizado)
+        .then(response => {
+            console.log(response.data)
+        })
+        .catch(error => {
+            console.log(error)
+        })
     }
 
     return (
@@ -63,7 +72,7 @@ const EditStudent = () => {
                     />
                 </div>
                 <div className="form-group" style={{paddingTop:10}}>
-                    <input type="submit" value="Criar Estudante" className="btn btn-primary"/>
+                    <input type="submit" value="Atualizar Estudante" className="btn btn-primary"/>
                 </div>
             </form>
         </div>

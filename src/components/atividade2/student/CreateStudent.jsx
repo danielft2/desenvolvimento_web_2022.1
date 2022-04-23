@@ -1,17 +1,29 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import axios from 'axios';
 
 const CreateStudent = () => {
     const [name, setName] = useState('');
     const [course, setCourse] = useState('');
     const [ira, setIra] = useState(0);
+    const [studentCriado, setStudentCriado] = useState(false);
+    const newStudent = {name, course, ira};
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        alert(`Aluno cadastrado \nNome: ${name} \ncurso: ${course} \nIRA: ${ira}`);
-        setName('');
-        setCourse('');
-        setIra(0);
+        event.preventDefault(); 
+        setStudentCriado(true)
     }
+
+    useEffect(() => {
+        if (studentCriado) {
+            axios.post("http://localhost:3001/students", newStudent)
+            .then((response) => {
+               console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+    }, [studentCriado])
 
     return (
         <div>

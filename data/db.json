@@ -1,0 +1,34 @@
+{
+  "students": [
+    {
+      "name": "Daniel Almeida de Freitas",
+      "course": "Engenharia de Software",
+      "ira": 9.8,
+      "id": 0
+    },
+    {
+      "name": "José victor",
+      "course": "Engenharia de Software",
+      "ira": 9.6,
+      "id": 2
+    },
+    {
+      "name": "Micaela Almeida da Silva",
+      "course": "Engenharia da computação",
+      "ira": 9.2,
+      "id": 3
+    },
+    {
+      "name": "Alicia de Sousa",
+      "course": "Ciência da Computação",
+      "ira": 8.6,
+      "id": 4
+    },
+    {
+      "name": "Luana Dias",
+      "course": "Design Digital",
+      "ira": "9.8",
+      "id": 5
+    }
+  ]
+}

@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { teachs } from "./data";
 import TeachTableRow from "./TeachTableRow";
+import axios from "axios";
 
 const ListTeach = () => {
     const generateTable = () => {
@@ -9,6 +10,18 @@ const ListTeach = () => {
            return <TeachTableRow teach={teach} key={key}/>
         })
     }
+
+    const [teachs, setTeachs] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/professors/")
+        .then(response => {
+            setTeachs(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }, [])
 
     return (
         <div>
