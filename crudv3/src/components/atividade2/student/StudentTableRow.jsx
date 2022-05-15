@@ -8,9 +8,8 @@ const StudentTableRow = (props) => {
         if(window.confirm(`Deseja mesmo excluir o elemento correspondente ao ID: ${_id}?`)){
             axios.delete(`http://localhost:3002/api/students/delete/${_id}`)
             .then(response=>{
-                    props.deleteStudentById(_id)
-                }
-            )
+                props.deleteStudentById(_id)
+            })
             .catch(error=>console.log(error))
         }
     }

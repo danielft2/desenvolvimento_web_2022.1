@@ -9,7 +9,7 @@ const EditStudent = () => {
     const param = useParams();
 
     useEffect(() => {
-        axios.get(`http://localhost:3002/api/students/${param.id}`)
+        axios.get(`http://localhost:3002/api/students/retrive/${param.id}`)
         .then(response => {
             setName(response.data.name);
             setCourse(response.data.course);

@@ -11,7 +11,7 @@ const EditTeach = () => {
     const param = useParams();
 
     useEffect(() => {
-        axios.get(`http://localhost:3002/api/professors/${param.id}`)
+        axios.get(`http://localhost:3002/api/professors/retrive/${param.id}`)
         .then(response => {
             setName(response.data.name);
             setUniversity(response.data.university);

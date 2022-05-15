@@ -14,7 +14,7 @@ const ListTeach = () => {
     const [teachs, setTeachs] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:3002/api/professors")
+        axios.get("http://localhost:3002/api/professors/list")
         .then(response => {
             setTeachs(response.data);
         })

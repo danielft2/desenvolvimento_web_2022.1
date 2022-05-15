@@ -4,6 +4,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var app = express();
+require('./db/mongo.connection');
+
+var students = require('./routes/student/students.route.mongo');
+var professors = require('./routes/professor/professor.router.mongo')
+
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -12,10 +17,9 @@ app.use(function(req, res, next) {
     next();
 });
 
-var users = require('./routes/users');
-var students = require('./routes/student/StudentsRoute')
-var professors = require("./routes/professor/ProfessorRoute");
-
+//var users = require('./routes/users');
+//var students = require('./routes/student/StudentsRoute')
+//var professors = require("./routes/professor/ProfessorRoute");
 
 
 app.use(bodyParser.json());
