@@ -9,7 +9,6 @@ require('./db/mongo.connection');
 var students = require('./routes/student/students.route.mongo');
 var professors = require('./routes/professor/professor.router.mongo')
 
-
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -20,7 +19,6 @@ app.use(function(req, res, next) {
 //var users = require('./routes/users');
 //var students = require('./routes/student/StudentsRoute')
 //var professors = require("./routes/professor/ProfessorRoute");
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

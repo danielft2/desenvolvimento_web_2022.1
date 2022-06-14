@@ -1,55 +1,53 @@
-import axios from "axios";
-import React, {useState, useEffect} from "react";
-import { useParams } from "react-router-dom";
-import { teachs } from "./data";
+import React, { useState } from "react";
+//import axios from "axios";
 
-const EditTeach = () => {
+import FirebaseContext from "../../../utils/FirebaseContext";
+import FirebaseProfessorsService from "../../../services/FirebaseProfessorsService";
+
+const CreateTeachPage = () => {
+    return(
+        <FirebaseContext.Consumer>
+            {(firebase) => <CreateTeach firebase={firebase} />}
+        </FirebaseContext.Consumer>
+    )
+}
+
+const CreateTeach = ({ firebase }) => {
     const [name, setName] = useState('');
     const [university, setUniversity] = useState('');
     const [degree, setDegree] = useState('');
 
-    const param = useParams();
-
-    useEffect(() => {
-        axios.get(`http://localhost:3002/api/professors/retrive/${param.id}`)
-        .then(response => {
-            setName(response.data.name);
-            setUniversity(response.data.university);
-            setDegree(response.data.degree);
-        })
-        .catch(error => console.log(error))
-    }, [param.id])
-
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert(`Professor Atualizado \nNome: ${name} \nUniversidade: ${university} \nTitulação: ${degree}`);
-        
-        const teachAtualizado = {name, university, degree};
-        axios.put(`http://localhost:3002/api/professors/edit/${param.id}`, teachAtualizado)
-        .then(response => {
-            console.log(response.data)
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        alert(`Professor cadastrado \nNome: ${name} \nUniversidade: ${university} \nDegree: ${degree}`);
+        setName('');
+        setUniversity('');
+        setDegree('');
+
+        const newProfessor = {name, university, degree};
+        // axios.post(`http://localhost:3002/api/professors/create`, newProfessor)
+        // .then(response => console.log(response.data))
+        // .catch( error => console.log(error))
+        const firestore = firebase.getFirestoreDb();
+        FirebaseProfessorsService.create(firestore, newProfessor);
     }
 
     return (
-        <div>
-            <h2 className="title-form">Criar Professor</h2>
+        <div className="formStyle">
+            <h2 className="title-form text-center title">Criar novo Professor</h2>
             <form onSubmit={handleSubmit}>
-                <div className="form-group" style={{marginBottom: 5}}>
+                <div className="form-group mb-2">
                     <label htmlFor="name">Nome</label>
                     <input 
                         type="text" 
                         name="Nome" 
-                        id="name"
+                        id="name" 
                         value={(name === null || name === undefined) ? '' : name}
                         className="form-control"
                         onChange={(event) => setName(event.target.value)}
                     />
                 </div>
-                <div className="form-group" style={{marginBottom: 5}}>
+                <div className="form-group mb-2">
                     <label htmlFor="university">Universidade</label>
                     <input 
                         type="text" 
@@ -60,7 +58,7 @@ const EditTeach = () => {
                         onChange={(event) => setUniversity(event.target.value)}
                     />
                 </div>
-                <div className="form-group" style={{marginBottom: 5}}>
+                <div className="form-group">
                     <label htmlFor="degree">Titulação</label>
                     <input 
                         type="text" 
@@ -71,12 +69,12 @@ const EditTeach = () => {
                         onChange={(event) => setDegree(event.target.value)}
                     />
                 </div>
-                <div className="form-group" style={{paddingTop:10}}>
-                    <input type="submit" value="Atualizar Professor" className="btn btn-primary"/>
+                <div className="form-group mt-2">
+                    <input type="submit" value="Criar Professor" className="btn btn-primary"/>
                 </div>
             </form>
         </div>
     )
 }
 
-export default EditTeach;
+export default CreateTeachPage;

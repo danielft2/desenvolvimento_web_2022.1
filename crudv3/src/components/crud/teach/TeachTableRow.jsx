@@ -1,18 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 
 const TeachTableRow = (props) => {
     const { _id, name, university, degree } = props.teach;
 
-    const deleteTeach = (id) => {
+    const deleteTeach = (_id) => {
         if(window.confirm(`Deseja mesmo excluir o elemento correspondente ao ID: ${_id}?`)){
-            axios.delete(`http://localhost:3002/api/professors/delete/${_id}`)
-            .then( response => 
-                props.deleteTeachById(_id)   
-            )
-            .catch(error=>console.log(error))
+            props.deleteTeachById(_id) 
+        //     axios.delete(`http://localhost:3002/api/professors/delete/${_id}`)
+        //     .then( response => 
+        //         props.deleteTeachById(_id)   
+        //     )
+        //     .catch(error=>console.log(error))
         }
+        
     }
 
     return (

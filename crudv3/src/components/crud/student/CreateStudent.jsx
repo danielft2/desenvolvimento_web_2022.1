@@ -1,28 +1,45 @@
-import React, {useState, useEffect} from "react";
-import axios from 'axios';
+import React, { useState } from "react";
+//import axios from 'axios';
 
-const CreateStudent = () => {
+import FirebaseContext from "../../../utils/FirebaseContext";
+import FirebaseStudentsService from "../../../services/FirebaseStudentsService";
+import { useNavigate } from "react-router-dom";
+
+const CreateStudentPage = () => {
+    return (
+        <FirebaseContext.Consumer>
+            { (firebase) => <CreateStudent firebase={firebase}/> }
+        </FirebaseContext.Consumer>
+    )
+}
+
+const CreateStudent = ({ firebase }) => {
     const [name, setName] = useState('');
     const [course, setCourse] = useState('');
     const [ira, setIra] = useState(0);
-    const newStudent = {name, course, ira};
-
+    const navigate = useNavigate()
+    
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post("http://localhost:3002/api/students/create", newStudent)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.log(error)
-        })
+        //axios.post("http://localhost:3002/api/students/create", newStudent)
+        // .then((response) => {
+        //     console.log(response.data);
+        // })
+        // .catch(error => {
+        //     console.log(error)
+        // })
+
+        const newStudent = {name, course, ira};
+        const firestore = firebase.getFirestoreDb();
+        FirebaseStudentsService.create(firestore, newStudent);
+        //navigate('/ListStudent')
     }
 
     return (
-        <div>
-            <h2 className="title-form">Criar novo Estudante</h2>
+        <div className="formStyle">
+            <h2 className="title-form text-center pb-1 title">Criar novo Estudante</h2>
             <form onSubmit={handleSubmit}>
-                <div className="form-group" style={{marginBottom: 5}}>
+                <div className="form-group mb-2">
                     <label htmlFor="name">Nome</label>
                     <input 
                         className="form-control"
@@ -33,7 +50,7 @@ const CreateStudent = () => {
                         onChange={(event) => setName(event.target.value)}
                     />
                 </div>
-                <div className="form-group" style={{marginBottom: 5}}>
+                <div className="form-group mb-2" style={{marginBottom: 5}}>
                     <label htmlFor="name">Curso</label>
                     <input 
                         className="form-control"
@@ -63,4 +80,4 @@ const CreateStudent = () => {
     )
 }
 
-export default CreateStudent;
+export default CreateStudentPage;

@@ -1,0 +1,22 @@
+.navProfile {
+    color: white;
+}
+
+.loginStyle {
+    width: 50%;
+    margin: auto;
+    height: 80vh;
+}
+
+.formStyle {
+    width: 50%;
+    margin: auto;
+    height: 80vh;
+    display: grid;
+    align-content: center;
+}
+
+.title {
+    font-size: 1.8rem;
+}
+
