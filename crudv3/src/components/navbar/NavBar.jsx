@@ -2,11 +2,7 @@ import React from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
 
-export function NavBarVeri({ isLogged, firebase, setIsLogged }) {
-    return isLogged ? <NavBar firebase={firebase} setIsLogged={setIsLogged}/> : null;
-}
-
-const NavBar = ({ firebase, setIsLogged }) => {
+export const NavBar = ({ firebase, setIsLogged }) => {
     const navigate = useNavigate();
 
     function logout() {

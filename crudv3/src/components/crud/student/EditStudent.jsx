@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-//import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { validateFieldsStudent } from "../../../auth/validations/validateFieldsStudent";
+import { ButtonSpinner } from "../../ButtonSpinner";
 
 import FirebaseContext from "../../../utils/FirebaseContext";
 import FirebaseStudentsService from "../../../services/FirebaseStudentsService";
+
 
 const EditStudentPage = () => {
     return (
@@ -17,6 +20,10 @@ const EditStudent = ({ firebase }) => {
     const [name, setName] = useState('');
     const [course, setCourse] = useState('');
     const [ira, setIra] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [validate, setValidate] = useState({ name: '', course:' ', ira: 0 });
+    
+    const navigate = useNavigate()
     const param = useParams();
     const firestore = firebase.getFirestoreDb();
 
@@ -41,11 +48,25 @@ const EditStudent = ({ firebase }) => {
 
     }, [param.id, firebase])
 
+    const validateInputs = () => {
+        const { res, msg, validate } = validateFieldsStudent(name, course, ira);
+        setValidate(validate);
+    
+        if (res) {
+            setLoading(false);
+            return true;
+        } else {
+            toast.error(msg);
+            setLoading(false);
+            return false;
+        }
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert(`Aluno atualizado \nNome: ${name} \ncurso: ${course} \nIRA: ${ira}`);
-        const studentAtualizado = {name, course, ira}
-
+        if (!validateInputs()) return;
+        setLoading(true);
+   
         // axios.put(`http://localhost:3002/api/students/edit/${param.id}`, studentAtualizado)
         // .then(response => {
         //     console.log(response.data)
@@ -54,7 +75,18 @@ const EditStudent = ({ firebase }) => {
         //     console.log(error)
         // })
 
-        FirebaseStudentsService.edit(firestore, param.id, studentAtualizado);
+        const studentAtualizado = { name, course, ira }
+        FirebaseStudentsService.edit(firestore, param.id, studentAtualizado, (res, content) => {
+            setLoading(false);
+            
+            if(res) {
+                toast.success(`${name} alterado com sucesso`);
+                navigate('/ListStudent')
+            } else {
+                console.log("teste");
+                toast.error(content);
+            }
+        });
     }
 
     return (
@@ -64,7 +96,7 @@ const EditStudent = ({ firebase }) => {
                 <div className="form-group mb-2">
                     <label htmlFor="name">Nome</label>
                     <input 
-                        className="form-control"
+                        className={`form-control ${validate.name}`}
                         type="text" 
                         name="nome" 
                         id="name" 
@@ -75,7 +107,7 @@ const EditStudent = ({ firebase }) => {
                 <div className="form-group mb-2">
                     <label htmlFor="name">Curso</label>
                     <input 
-                        className="form-control"
+                        className={`form-control ${validate.course}`}
                         type="text" 
                         name="nome" 
                         id="name" 
@@ -86,7 +118,7 @@ const EditStudent = ({ firebase }) => {
                 <div className="form-group">
                     <label htmlFor="name">IRA</label>
                     <input 
-                        className="form-control"
+                        className={`form-control ${validate.ira}`}
                         type="text" 
                         name="nome" 
                         id="name" 
@@ -94,9 +126,7 @@ const EditStudent = ({ firebase }) => {
                         onChange={(event) => setIra(event.target.value)}
                     />
                 </div>
-                <div className="form-group" style={{paddingTop:10}}>
-                    <input type="submit" value="Atualizar Estudante" className="btn btn-primary"/>
-                </div>
+                <ButtonSpinner loading={loading} text="Atualizar estudante" />
             </form>
         </div>
     )   

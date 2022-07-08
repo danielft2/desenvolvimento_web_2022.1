@@ -42,7 +42,7 @@ class FirebaseStudentsService {
         })
     }
 
-    static create(firestore, user) {
+    static create(firestore, user, callback) {
         const {name, course, ira} = user;
         const coll = collection(firestore, 'students');
         addDoc(coll, {
@@ -51,9 +51,12 @@ class FirebaseStudentsService {
             ira
         })
         .then((response) => {
+            callback(true, response.id)
             console.log(response)
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            callback(false, error.code)
+        })
     }
 
     static delete(firestore, _id) {
@@ -63,11 +66,15 @@ class FirebaseStudentsService {
         .catch(error => console.log(error))
     }
 
-    static edit(firestore, _id, newDados) {
+    static edit(firestore, _id, newDados, callback) {
         const document = doc(firestore, "students", _id);
         setDoc(document, newDados)
-        .then(() => console.log(newDados))
-        .catch(error => console.log(error));
+        .then(() => {
+            callback(true, newDados);
+        })
+        .catch(error => {
+            callback(false, error.code)
+        });
     }
 
     static retrive(firestore, _id, callback) {

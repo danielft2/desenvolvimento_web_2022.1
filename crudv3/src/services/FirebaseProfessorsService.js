@@ -47,20 +47,20 @@ class FirebaseProfessorsService {
         })
     }
 
-    static create(firestore, user) {
+    static create(firestore, user, callback) {
         const {name, university, degree} = user;
         const coll = collection(firestore, 'professors');
         async function adicionarDoc() {
-            const docCriado = await addDoc(coll, {
-                name,
-                university,
-                degree
-            })
-
             try {
-                console.log(docCriado);
-            } catch (error) {
-                console.log(error);
+                const docCriado = await addDoc(coll, {
+                    name,
+                    university,
+                    degree
+                })
+
+                callback(true, docCriado);
+            } catch(error) {
+                callback(false, error.code)
             }
         }
 
@@ -74,11 +74,15 @@ class FirebaseProfessorsService {
         .catch(error => console.log(error))
     }
 
-    static edit(firestore, _id, newDados) {
+    static edit(firestore, _id, newDados, callback) {
         const document = doc(firestore, "professors", _id);
         setDoc(document, newDados)
-        .then(() => console.log(newDados))
-        .catch(error => console.log(error));
+        .then(() => {
+            callback(true, newDados);
+        })
+        .catch(error => {
+            callback(false, error.code);
+        });
     }
 
     static retrive(firestore, _id, callback) {

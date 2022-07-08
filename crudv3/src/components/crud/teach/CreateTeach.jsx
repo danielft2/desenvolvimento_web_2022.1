@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-//import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { validateFieldsProfessor } from "../../../auth/validations/validatesFieldsProfessor";
+import { ButtonSpinner } from "../../ButtonSpinner";
 
 import FirebaseContext from "../../../utils/FirebaseContext";
 import FirebaseProfessorsService from "../../../services/FirebaseProfessorsService";
+
 
 const CreateTeachPage = () => {
     return(
@@ -16,20 +20,46 @@ const CreateTeach = ({ firebase }) => {
     const [name, setName] = useState('');
     const [university, setUniversity] = useState('');
     const [degree, setDegree] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [validate, setValidate] = useState({ name: '', university:'', degree: '' });
+
+    const navigate = useNavigate()
+
+    const validateInputs = () => {
+        const { res, msg, validate } = validateFieldsProfessor(name, university, degree);
+        setValidate(validate);
+    
+        if (res) {
+            setLoading(false);
+            return true;
+        } else {
+            toast.error(msg);
+            setLoading(false);
+            return false;
+        }
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert(`Professor cadastrado \nNome: ${name} \nUniversidade: ${university} \nDegree: ${degree}`);
-        setName('');
-        setUniversity('');
-        setDegree('');
+        if (!validateInputs()) return;
+        setLoading(true);
 
-        const newProfessor = {name, university, degree};
         // axios.post(`http://localhost:3002/api/professors/create`, newProfessor)
         // .then(response => console.log(response.data))
         // .catch( error => console.log(error))
+
+        const newProfessor = { name, university, degree };
         const firestore = firebase.getFirestoreDb();
-        FirebaseProfessorsService.create(firestore, newProfessor);
+        FirebaseProfessorsService.create(firestore, newProfessor, (res, content) => {
+            setLoading(false);
+
+            if(res) {
+                toast.success(`${name} criado com sucesso.`);
+                navigate('/ListTeach');
+            } else {
+                toast.error(content);
+            }
+        });
     }
 
     return (
@@ -43,7 +73,7 @@ const CreateTeach = ({ firebase }) => {
                         name="Nome" 
                         id="name" 
                         value={(name === null || name === undefined) ? '' : name}
-                        className="form-control"
+                        className={`form-control ${validate.name}`}
                         onChange={(event) => setName(event.target.value)}
                     />
                 </div>
@@ -54,7 +84,7 @@ const CreateTeach = ({ firebase }) => {
                         name="Nome" 
                         id="university" 
                         value={(university === null || university === undefined) ? '' : university}
-                        className="form-control"
+                        className={`form-control ${validate.university}`}
                         onChange={(event) => setUniversity(event.target.value)}
                     />
                 </div>
@@ -65,13 +95,11 @@ const CreateTeach = ({ firebase }) => {
                         name="Nome" 
                         id="degree" 
                         value={(degree === null || degree === undefined) ? '' : degree}
-                        className="form-control"
+                        className={`form-control ${validate.degree}`}
                         onChange={(event) => setDegree(event.target.value)}
                     />
                 </div>
-                <div className="form-group mt-2">
-                    <input type="submit" value="Criar Professor" className="btn btn-primary"/>
-                </div>
+                <ButtonSpinner loading={loading} text="Criar professor" />
             </form>
         </div>
     )

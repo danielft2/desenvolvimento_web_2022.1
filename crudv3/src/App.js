@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavBarVeri } from './components/navbar/NavBar';
+import { NavBar } from './components/navbar/NavBar';
 import { Routers } from './routers/Routers'
 
 import FirebaseContext from './utils/FirebaseContext';
@@ -17,7 +17,7 @@ function App({ firebase }) {
 
   return (
     <>
-      <NavBarVeri isLogged={isLogged} firebase={firebase} setIsLogged={setIsLogged}/>
+      <NavBar isLogged={isLogged} firebase={firebase} setIsLogged={setIsLogged}/>
       <div className='container-fluid container-reset mt-4'>
         <Routers isLogged={isLogged} setIsLogged={setIsLogged} />
       </div>

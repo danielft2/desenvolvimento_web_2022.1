@@ -1,7 +1,8 @@
-//import axios from "axios";
 import React, {useState, useEffect} from "react";
-import { useParams } from "react-router-dom";
-// import { teachs } from "./data";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { validateFieldsProfessor } from "../../../auth/validations/validatesFieldsProfessor";
+import { ButtonSpinner } from "../../ButtonSpinner";
 
 import FirebaseContext from "../../../utils/FirebaseContext";
 import FirebaseProfessorsService from "../../../services/FirebaseProfessorsService";
@@ -18,7 +19,10 @@ const EditTeach = ({ firebase }) => {
     const [name, setName] = useState('');
     const [university, setUniversity] = useState('');
     const [degree, setDegree] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [validate, setValidate] = useState({ name: '', university:'', degree: '' });
 
+    const navigate = useNavigate()
     const param = useParams();
 
     useEffect(() => {
@@ -29,6 +33,7 @@ const EditTeach = ({ firebase }) => {
         //     setDegree(response.data.degree);
         // })
         // .catch(error => console.log(error))
+
         const firestore = firebase.getFirestoreDb();
         FirebaseProfessorsService.retrive(firestore, param.id, (professor) => {
             const { name, university, degree } = professor;
@@ -39,11 +44,25 @@ const EditTeach = ({ firebase }) => {
         });
     }, [param.id, firebase])
 
+    const validateInputs = () => {
+        const { res, msg, validate } = validateFieldsProfessor(name, university, degree);
+        setValidate(validate);
+    
+        if (res) {
+            setLoading(false);
+            return true;
+        } else {
+            toast.error(msg);
+            setLoading(false);
+            return false;
+        }
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        alert(`Professor Atualizado \nNome: ${name} \nUniversidade: ${university} \nTitulação: ${degree}`);
+        if (!validateInputs()) return;
+        setLoading(true);
         
-        const teachAtualizado = {name, university, degree};
         // axios.put(`http://localhost:3002/api/professors/edit/${param.id}`, teachAtualizado)
         // .then(response => {
         //     console.log(response.data)
@@ -51,8 +70,19 @@ const EditTeach = ({ firebase }) => {
         // .catch(error => {
         //     console.log(error);
         // })
+
+        const teachAtualizado = {name, university, degree};
         const firestore = firebase.getFirestoreDb();
-        FirebaseProfessorsService.edit(firestore, param.id, teachAtualizado);
+        FirebaseProfessorsService.edit(firestore, param.id, teachAtualizado, (res, content) => {
+            setLoading(false);
+
+            if(res) {
+                toast.success(`${name} atualizado com sucesso`);
+                navigate('/ListTeach');
+            } else {
+                toast.error(content);
+            }
+        });
     }
 
     return (
@@ -66,7 +96,7 @@ const EditTeach = ({ firebase }) => {
                         name="Nome" 
                         id="name"
                         value={(name === null || name === undefined) ? '' : name}
-                        className="form-control"
+                        className={`form-control ${validate.name}`}
                         onChange={(event) => setName(event.target.value)}
                     />
                 </div>
@@ -77,7 +107,7 @@ const EditTeach = ({ firebase }) => {
                         name="Nome" 
                         id="university" 
                         value={(university === null || university === undefined) ? '' : university}
-                        className="form-control"
+                        className={`form-control ${validate.university}`}
                         onChange={(event) => setUniversity(event.target.value)}
                     />
                 </div>
@@ -88,13 +118,11 @@ const EditTeach = ({ firebase }) => {
                         name="Nome" 
                         id="degree" 
                         value={(degree === null || degree === undefined) ? '' : degree}
-                        className="form-control"
+                        className={`form-control ${validate.degree}`}
                         onChange={(event) => setDegree(event.target.value)}
                     />
                 </div>
-                <div className="form-group pt-2">
-                    <input type="submit" value="Atualizar Professor" className="btn btn-primary"/>
-                </div>
+                <ButtonSpinner loading={loading} text="Atualizar professor" />
             </form>
         </div>
     )

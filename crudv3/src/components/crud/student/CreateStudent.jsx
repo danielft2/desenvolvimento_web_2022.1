@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-//import axios from 'axios';
+import { toast } from 'react-toastify';
+import { validateFieldsStudent } from "../../../auth/validations/validateFieldsStudent";
+import { useNavigate } from "react-router-dom";
+import { ButtonSpinner } from "../../ButtonSpinner";
+
 
 import FirebaseContext from "../../../utils/FirebaseContext";
 import FirebaseStudentsService from "../../../services/FirebaseStudentsService";
-import { useNavigate } from "react-router-dom";
 
 const CreateStudentPage = () => {
     return (
@@ -17,10 +20,30 @@ const CreateStudent = ({ firebase }) => {
     const [name, setName] = useState('');
     const [course, setCourse] = useState('');
     const [ira, setIra] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [validate, setValidate] = useState({ name: '', course:' ', ira: 0 });
+
     const navigate = useNavigate()
+
+    const validateInputs = () => {
+        const { res, msg, validate } = validateFieldsStudent(name, course, ira);
+        setValidate(validate);
+    
+        if (res) {
+            setLoading(false);
+            return true;
+        } else {
+            toast.error(msg);
+            setLoading(false);
+            return false;
+        }
+    }
     
     const handleSubmit = (event) => {
         event.preventDefault();
+        if (!validateInputs()) return;
+        setLoading(true);
+
         //axios.post("http://localhost:3002/api/students/create", newStudent)
         // .then((response) => {
         //     console.log(response.data);
@@ -31,8 +54,17 @@ const CreateStudent = ({ firebase }) => {
 
         const newStudent = {name, course, ira};
         const firestore = firebase.getFirestoreDb();
-        FirebaseStudentsService.create(firestore, newStudent);
-        //navigate('/ListStudent')
+        FirebaseStudentsService.create(firestore, newStudent, (res, content) => {
+            setLoading(false);
+
+            if(res) {  
+                toast.success(`${name} criado(a) com sucesso.`);
+                navigate('/ListStudent')
+            } else {
+                toast.error(content);
+            }
+        });
+        
     }
 
     return (
@@ -42,7 +74,7 @@ const CreateStudent = ({ firebase }) => {
                 <div className="form-group mb-2">
                     <label htmlFor="name">Nome</label>
                     <input 
-                        className="form-control"
+                        className={`form-control ${validate.name}`}
                         type="text" 
                         name="nome" 
                         id="name" 
@@ -53,7 +85,7 @@ const CreateStudent = ({ firebase }) => {
                 <div className="form-group mb-2" style={{marginBottom: 5}}>
                     <label htmlFor="name">Curso</label>
                     <input 
-                        className="form-control"
+                        className={`form-control ${validate.course}`}
                         type="text" 
                         name="nome" 
                         id="name" 
@@ -64,17 +96,15 @@ const CreateStudent = ({ firebase }) => {
                 <div className="form-group" style={{marginBottom: 5}}>
                     <label htmlFor="name">IRA</label>
                     <input 
-                        className="form-control"
-                        type="text" 
+                        className={`form-control ${validate.ira}`}
+                        type="number" 
                         name="nome" 
                         id="name" 
                         value={(ira === null || ira === undefined) ? '' : ira}
                         onChange={(event) => setIra(event.target.value)}
                     />
                 </div>
-                <div className="form-group" style={{paddingTop:10}}>
-                    <input type="submit" value="Criar Estudante" className="btn btn-primary"/>
-                </div>
+                <ButtonSpinner loading={loading} text="Criar estudante"/>
             </form>
         </div>
     )

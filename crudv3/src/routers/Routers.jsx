@@ -11,11 +11,13 @@ import CreateTeach from '../components/crud/teach/CreateTeach';
 import ListTeach from '../components/crud/teach/ListTeach';
 import EditTeach from '../components/crud/teach/EditTeach';
 import { PrivateRouter } from "./PrivateRouter";
+import { Cadastro } from "../components/login/Cadastro";
 
 export const Routers = ({ isLogged, setIsLogged }) => {
     return (
         <Routes>
             <Route path="/" element={<LoginPage isLogged={isLogged} setIsLogged={setIsLogged} />} />
+            <Route path="/Cadastro" element={<Cadastro isLogged={isLogged} setIsLogged={setIsLogged}/>} />
    
             <Route path="/Home" element={<PrivateRouter isLogged={isLogged} />} >
                 <Route path="/Home" element={<Home />} />
